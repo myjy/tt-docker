@@ -1,6 +1,6 @@
 FROM ubuntu:24.04
 
-ARG TARGETARCH=amd64
+ARG TARGETARCH
 ARG VERSION
 
 ENV TZ=Asia/Shanghai \
