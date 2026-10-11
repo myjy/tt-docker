@@ -1,4 +1,4 @@
-FROM ubuntu:24.04
+FROM ubuntu:26.04
 
 ARG TARGETARCH
 ARG VERSION
@@ -17,7 +17,7 @@ COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 RUN test -n "${VERSION:-}" || { echo "Build argument VERSION is required" >&2; exit 1; } \
     && case "${VERSION}" in \
         v*) ;; \
-        *) echo "Build argument VERSION must include v prefix, e.g. v5.21" >&2; exit 1 ;; \
+        *) echo "Build argument VERSION must include v prefix, e.g. v5.23" >&2; exit 1 ;; \
     esac \
     && apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
@@ -30,7 +30,7 @@ RUN test -n "${VERSION:-}" || { echo "Build argument VERSION is required" >&2; e
     && ln -snf "/usr/share/zoneinfo/${TZ}" /etc/localtime \
     && echo "${TZ}" > /etc/timezone \
     && case "${TARGETARCH}" in \
-        amd64) TT_PLATFORM="ubuntu24-x86_64" ;; \
+        amd64) TT_PLATFORM="ubuntu26-x86_64" ;; \
         arm64) TT_PLATFORM="raspios12-arm64" ;; \
         *) echo "Unsupported TARGETARCH=${TARGETARCH}" >&2; exit 1 ;; \
     esac \
@@ -41,6 +41,8 @@ RUN test -n "${VERSION:-}" || { echo "Build argument VERSION is required" >&2; e
     && install -m 0755 "/tmp/${root}/server/tt5prosrv" /usr/local/bin/tt5prosrv \
     && mkdir -p /etc/teamtalk \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+ENV LANG=C.UTF-8
 
 WORKDIR /etc/teamtalk
 VOLUME [ "/etc/teamtalk" ]
